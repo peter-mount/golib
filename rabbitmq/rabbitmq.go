@@ -95,7 +95,6 @@ func (s *RabbitMQ) Connect( ) {
 
 // Publish a message
 func (s *RabbitMQ) Publish( routingKey string, msg []byte ) {
-  log.Println( "Publishing to ", s.exchange(), routingKey )
 
   err := s.channel.Publish(
     s.exchange(),
