@@ -111,3 +111,15 @@ func (s *RabbitMQ) Publish( routingKey string, msg []byte ) {
   }
 
 }
+
+func (r *RabbitMQ) QueueDeclare(name string, durable, autoDelete, exclusive, noWait bool, args amqp.Table) (amqp.Queue, error) {
+  return r.channel.QueueDeclare(name, durable, autoDelete, exclusive, noWait, args)
+}
+
+func (r *RabbitMQ) QueueBind(name, key, exchange string, noWait bool, args amqp.Table) error {
+  return r.channel.QueueBind(name, key, exchange, noWait, args)
+}
+
+func (r *RabbitMQ) Consume(queue, consumer string, autoAck, exclusive, noLocal, noWait bool, args amqp.Table) (<-chan amqp.Delivery, error) {
+  return r.channel.Consume( queue, consumer, autoAck, exclusive, noLocal, noWait, args )
+}
