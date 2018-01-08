@@ -28,10 +28,19 @@ type Statistics struct {
 func (s *Statistics) Configure() {
   logStats = s.Log
 
+  // If no Cron defined create one
+  if s.Cron == nil {
+    s.Cron = cron.New()
+    s.Cron.Start()
+  }
+
+  // The schedule, default to every minute if not set
   var schedule = s.Schedule
   if schedule == "" {
     schedule = "0 * * * * *"
   }
+
+  // Schedule the recorder service
   s.Cron.AddFunc( schedule, statsRecord )
 }
 
