@@ -25,7 +25,7 @@ type Statistics struct {
   Cron        *cron.Cron
 }
 
-func (s *Statistics) configure() {
+func (s *Statistics) Configure() {
   logStats = s.Log
 
   var schedule = s.Schedule
