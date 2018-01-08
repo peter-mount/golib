@@ -3,14 +3,16 @@
 package statistics
 
 import (
+  "gopkg.in/robfig/cron.v2"
   "sync"
 )
 
 var (
   // Predefined Statistics
-  stats   map[string]*Statistic = make( map[string]*Statistic )
+  stats       map[string]*Statistic = make( map[string]*Statistic )
   // Mutex
-  mutex  *sync.Mutex = &sync.Mutex{}
+  mutex      *sync.Mutex = &sync.Mutex{}
+  logStats    bool
 )
 
 type Statistics struct {
@@ -20,6 +22,17 @@ type Statistics struct {
   Statistics  bool
   // The schedule to use to collect statistics, defaults to every minute
   Schedule    string
+  Cron        *cron.Cron
+}
+
+func (s *Statistics) configure() {
+  logStats = s.Log
+
+  var schedule = s.Schedule
+  if schedule == "" {
+    schedule = "0 * * * * *"
+  }
+  s.Cron.AddFunc( schedule, statsRecord )
 }
 
 // return a statistic creating it as needed

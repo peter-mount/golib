@@ -39,7 +39,7 @@ func (s *Statistic) recordHistory() {
 
 func (value *Statistic) logState() {
   // Don't report stats with no submitted values, i.e. Min > Max
-  if( value.Min <= value.Max ) {
+  if logStats &&  value.Min <= value.Max {
     log.Printf(
       "%s Val %d Count %d Min %d Max %d Sum %d Ave %d\n",
       value.name,
