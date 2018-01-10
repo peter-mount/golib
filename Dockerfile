@@ -31,3 +31,7 @@ RUN go build \
 RUN go build \
       -v \
       github.com/peter-mount/golib/statistics
+
+RUN go build \
+      -v \
+      github.com/peter-mount/golib/util
