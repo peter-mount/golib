@@ -1,5 +1,7 @@
-// Handle the connection to the remote AMQP server to receive messages
-
+// A simple amqp library for connecting to RabbitMQ
+//
+// This is a wrapper around the github.com/streadway/amqp library.
+//
 package rabbitmq
 
 import (
@@ -9,11 +11,17 @@ import (
 )
 
 type RabbitMQ struct {
+  // The amqp url to connect to
   Url                 string  `yaml:"url"`
+  // The schange for publishing, defaults to amq.topic
   Exchange            string  `yaml:"exchange"`
+  // The name of the connection that appears in the management plugin
   ConnectionName      string  `yaml:"connectionName"`
+  // The heartBeat in seconds. Defaults to 10
   HeartBeat           int     `yaml:"heartBeat"`
+  // The product name in the management plugin (optional)
   Product             string  `yaml:"product"`
+  // The product version in the management plugin (optional)
   Version             string  `yaml:"version"`
   // ===== Internal
   connection     *amqp.Connection  `yaml:"-"`  // amqp connection
@@ -35,7 +43,7 @@ func (s *RabbitMQ) exchange() string {
   return s.Exchange
 }
 
-// Connect to amqp server as necessary
+// Connect connects to the RabbitMQ instace thats been configured.
 func (s *RabbitMQ) Connect( ) {
   log.Println( "Connecting to amqp" )
 
@@ -111,14 +119,17 @@ func (s *RabbitMQ) Publish( routingKey string, msg []byte ) {
 
 }
 
+// QueueDeclare declares a queue
 func (r *RabbitMQ) QueueDeclare(name string, durable, autoDelete, exclusive, noWait bool, args amqp.Table) (amqp.Queue, error) {
   return r.channel.QueueDeclare(name, durable, autoDelete, exclusive, noWait, args)
 }
 
+// QueueBind binds a queue to an exchange & routingKey
 func (r *RabbitMQ) QueueBind(name, key, exchange string, noWait bool, args amqp.Table) error {
   return r.channel.QueueBind(name, key, exchange, noWait, args)
 }
 
+// Consume adds a consumer to the queue and returns a GO channel
 func (r *RabbitMQ) Consume(queue, consumer string, autoAck, exclusive, noLocal, noWait bool, args amqp.Table) (<-chan amqp.Delivery, error) {
   return r.channel.Consume( queue, consumer, autoAck, exclusive, noLocal, noWait, args )
 }

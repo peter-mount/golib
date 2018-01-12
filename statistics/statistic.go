@@ -1,11 +1,10 @@
-// Thread safe statistics
-
 package statistics
 
 import (
   "time"
 )
 
+// A basic statistic
 type Statistic struct {
   // The statistic name
   name      string        `json:"-"`
@@ -13,15 +12,15 @@ type Statistic struct {
   Timestamp int64         `json:"timestamp"`
   // the current value
   Value     int64         `json:"value"`
-  // the number of updates
+  // the number of updates to this statistic during the sample period
   Count     int64         `json:"count"`
-  // The minimum value
+  // The minimum value during the sample period
   Min       int64         `json:"min"`
-  // The maximum value
+  // The maximum value during the sample period
   Max       int64         `json:"max"`
-  // The average value
+  // The average value during the sample period
   Ave       int64         `json:"average"`
-  // The sum of all values
+  // The sum of all values during the sample period
   Sum       int64         `json:"sum"`
   // Historic data, max 72 entries at 5 minute intervals
   History   []*Statistic  `json:"history,omitempty"`

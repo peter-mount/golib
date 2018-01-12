@@ -1,5 +1,3 @@
-// Thread safe statistics
-
 package statistics
 
 import (

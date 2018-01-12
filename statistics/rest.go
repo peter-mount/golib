@@ -1,5 +1,3 @@
-// Thread safe statistics
-
 package statistics
 
 import (
@@ -8,6 +6,8 @@ import (
   "net/http"
 )
 
+// StatsHandler installs a github.com/gorilla/mux handler under the path /stats
+// which exposes the current statistics & any history via a simple HTTP GET request.
 func StatsHandler( router *mux.Router ) {
   router.HandleFunc( "/stats", getStats ).Methods( "GET" )
 }

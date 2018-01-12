@@ -4,6 +4,8 @@ import (
   "time"
 )
 
+// Read allows a struct to read from a BinraryCodec as long as it implements
+// the Read(*BinaryCodec) function.
 func (c *BinaryCodec) Read( i interface{ Read(*BinaryCodec) } ) *BinaryCodec {
   if c.err == nil {
     i.Read( c )
@@ -11,6 +13,7 @@ func (c *BinaryCodec) Read( i interface{ Read(*BinaryCodec) } ) *BinaryCodec {
   return c
 }
 
+// ReadByte reads a single byte
 func (c *BinaryCodec) ReadByte( b *byte ) *BinaryCodec {
   if c.err == nil {
     if t, err := c.buf.ReadByte(); err != nil {
@@ -22,6 +25,7 @@ func (c *BinaryCodec) ReadByte( b *byte ) *BinaryCodec {
   return c
 }
 
+// ReadBytes reads a byte slice
 func (c *BinaryCodec) ReadBytes( b *[]byte ) *BinaryCodec {
   var l int16
   if c.err == nil {
@@ -38,6 +42,7 @@ func (c *BinaryCodec) ReadBytes( b *[]byte ) *BinaryCodec {
   return c
 }
 
+// ReadString reads a string
 func (c *BinaryCodec) ReadString( s *string) *BinaryCodec {
   var b []byte
   if c.err == nil {
@@ -49,6 +54,7 @@ func (c *BinaryCodec) ReadString( s *string) *BinaryCodec {
   return c
 }
 
+// ReadStringArray reads an array of strings
 func (c *BinaryCodec) ReadStringArray( s *[]string) *BinaryCodec {
   var l int16
   if c.err == nil {
@@ -66,6 +72,7 @@ func (c *BinaryCodec) ReadStringArray( s *[]string) *BinaryCodec {
   return c
 }
 
+// ReadInt reads an integer. The underlying storage is 64bits in length.
 func (c *BinaryCodec) ReadInt( i *int ) *BinaryCodec {
   var t int64
   c.ReadInt64( &t )
@@ -75,6 +82,7 @@ func (c *BinaryCodec) ReadInt( i *int ) *BinaryCodec {
   return c
 }
 
+// ReadInt64 reads an int64
 func (c *BinaryCodec) ReadInt64( i *int64) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 8 )
@@ -88,6 +96,7 @@ func (c *BinaryCodec) ReadInt64( i *int64) *BinaryCodec {
   return c
 }
 
+// ReadInt32 reads an int32
 func (c *BinaryCodec) ReadInt32( i *int32 ) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 4 )
@@ -100,6 +109,7 @@ func (c *BinaryCodec) ReadInt32( i *int32 ) *BinaryCodec {
   return c
 }
 
+// ReadInt16 reads an int16
 func (c *BinaryCodec) ReadInt16( i *int16 ) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 2 )
@@ -112,6 +122,7 @@ func (c *BinaryCodec) ReadInt16( i *int16 ) *BinaryCodec {
   return c
 }
 
+// ReadBool reads a bool. The underlying storage is a single byte
 func (c *BinaryCodec) ReadBool( i *bool ) *BinaryCodec {
   if c.err == nil {
     if b, err := c.buf.ReadByte(); err != nil {
@@ -127,6 +138,7 @@ func (c *BinaryCodec) ReadBool( i *bool ) *BinaryCodec {
   return c
 }
 
+// ReadTime reads a time.Time value
 func (c *BinaryCodec) ReadTime( i *time.Time ) *BinaryCodec {
   var b []byte
 

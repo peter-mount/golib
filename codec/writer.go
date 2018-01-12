@@ -4,14 +4,8 @@ import (
   "time"
 )
 
-func (c *BinaryCodec) Bytes() []byte {
-  return c.buf.Bytes()
-}
-
-func (c *BinaryCodec) Error() error {
-  return c.err
-}
-
+// Write allows a struct to write to the BinaryCodec as long as it implements
+// Write(*BinaryCodec)
 func (c *BinaryCodec) Write( i interface{ Write(*BinaryCodec) } ) *BinaryCodec {
   if c.err == nil {
     i.Write( c )
@@ -19,6 +13,7 @@ func (c *BinaryCodec) Write( i interface{ Write(*BinaryCodec) } ) *BinaryCodec {
   return c
 }
 
+// WriteByte writes a single byte
 func (c *BinaryCodec) WriteByte( b byte ) *BinaryCodec {
   if c.err == nil {
     c.err = c.buf.WriteByte( b )
@@ -26,6 +21,8 @@ func (c *BinaryCodec) WriteByte( b byte ) *BinaryCodec {
   return c
 }
 
+// WriteBytes writes a byte array.
+// The underlying storage is an int16 containing the length followed by the array.
 func (c *BinaryCodec) WriteBytes( b []byte ) *BinaryCodec {
   if c.err == nil {
     c.WriteInt16( int16( len( b ) ) )
@@ -36,6 +33,9 @@ func (c *BinaryCodec) WriteBytes( b []byte ) *BinaryCodec {
   return c
 }
 
+// WriteString writes a string
+// This is the same as calling WriteBytes( []byte( string ) ) so it's an int16
+// containing the length of the strings byte representation followed by the bytes.
 func (c *BinaryCodec) WriteString( s string ) *BinaryCodec {
   if c.err == nil {
     c.WriteBytes( []byte( s ) )
@@ -43,6 +43,9 @@ func (c *BinaryCodec) WriteString( s string ) *BinaryCodec {
   return c
 }
 
+// WriteStringArray writes an array of strings.
+// The underlying storage is an int16 containing the number of entries in the
+// array and a string written by WriteString(string) for each entry.
 func (c *BinaryCodec) WriteStringArray( s []string ) *BinaryCodec {
   if c.err == nil {
     c.WriteInt16( int16( len( s ) ) )
@@ -53,10 +56,13 @@ func (c *BinaryCodec) WriteStringArray( s []string ) *BinaryCodec {
   return c
 }
 
+// WriteInt writes an int.
+// This is the same as WriteInt64( int64( int ) )
 func (c *BinaryCodec) WriteInt( i int ) *BinaryCodec {
   return c.WriteInt64( int64(i) )
 }
 
+// WriteInt64 writes an int64.
 func (c *BinaryCodec) WriteInt64( v int64 ) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 8 )
@@ -73,6 +79,7 @@ func (c *BinaryCodec) WriteInt64( v int64 ) *BinaryCodec {
   return c
 }
 
+// WriteInt32 writes an int32
 func (c *BinaryCodec) WriteInt32( v int32 ) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 4 )
@@ -85,6 +92,7 @@ func (c *BinaryCodec) WriteInt32( v int32 ) *BinaryCodec {
   return c
 }
 
+// WriteInt16 writes an int16
 func (c *BinaryCodec) WriteInt16( v int16 ) *BinaryCodec {
   if c.err == nil {
     var b []byte = make( []byte, 2 )
@@ -95,6 +103,8 @@ func (c *BinaryCodec) WriteInt16( v int16 ) *BinaryCodec {
   return c
 }
 
+// WriteBool writes a bool.
+// The underlying storage is a single byte.
 func (c *BinaryCodec) WriteBool( b bool ) *BinaryCodec {
   if c.err == nil {
     if b {
@@ -106,6 +116,7 @@ func (c *BinaryCodec) WriteBool( b bool ) *BinaryCodec {
   return c
 }
 
+// WriteTime writes a time.Time
 func (c *BinaryCodec) WriteTime( t time.Time ) *BinaryCodec {
   if c.err == nil {
     if b, err := t.MarshalBinary(); err != nil {
