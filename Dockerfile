@@ -26,6 +26,10 @@ ADD . /go/src/github.com/peter-mount/golib
 
 RUN go build \
       -v \
+      github.com/peter-mount/golib/codec
+
+RUN go build \
+      -v \
       github.com/peter-mount/golib/rabbitmq
 
 RUN go build \
