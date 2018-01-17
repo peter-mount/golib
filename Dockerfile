@@ -34,6 +34,10 @@ RUN go build \
 
 RUN go build \
       -v \
+      github.com/peter-mount/golib/rest
+
+RUN go build \
+      -v \
       github.com/peter-mount/golib/statistics
 
 RUN go build \
