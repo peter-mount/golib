@@ -22,6 +22,8 @@ type Rest struct {
   sent          bool
   // Request route variables
   vars          map[string]string
+  // The context
+  context       string
 }
 
 // NewRest creates a new Rest query
@@ -59,4 +61,9 @@ func (r *Rest) Status( status int ) *Rest {
 func (r *Rest) Value( value interface{} ) *Rest {
   r.value = value
   return r
+}
+
+// Context returns the base context for this request
+func (r *Rest) Context() string {
+  return r.context
 }

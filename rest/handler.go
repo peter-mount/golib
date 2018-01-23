@@ -8,6 +8,10 @@ import (
 
 // HandleFunc registers a new route with a matcher for the URL path
 func (s *Server) HandleFunc( path string, f func(http.ResponseWriter, *http.Request) ) *mux.Route {
+  if path != "" && path[0:1] != "/" {
+    path = "/" + path
+  }
+
   return s.router.HandleFunc( path, f )
 }
 
@@ -16,6 +20,10 @@ func (s *Server) HandleFunc( path string, f func(http.ResponseWriter, *http.Requ
 // If the returned error is not nil then a 500 response is issued otherwise
 // the response is sent unless Rest.Send() has already been called.
 func (s *Server) Handle( path string, f func( *Rest ) error ) *mux.Route {
+  if path != "" && path[0:1] != "/" {
+    path = "/" + path
+  }
+
   return s.HandleFunc( path, Handler( f ) )
 }
 
