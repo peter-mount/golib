@@ -9,11 +9,11 @@ import (
 // StatsHandler installs a github.com/gorilla/mux handler under the path /stats
 // which exposes the current statistics & any history via a simple HTTP GET request.
 func StatsHandler( router *mux.Router ) {
-  router.HandleFunc( "/stats", getStats ).Methods( "GET" )
+  router.HandleFunc( "/stats", StatsRestHandler ).Methods( "GET" )
 }
 
 // Handler for /stats
-func getStats(w http.ResponseWriter, r *http.Request) {
+func StatsRestHandler(w http.ResponseWriter, r *http.Request) {
   var result = make( map[string]*Statistic )
 
   mutex.Lock()
@@ -26,6 +26,8 @@ func getStats(w http.ResponseWriter, r *http.Request) {
   }
 
   mutex.Unlock()
+
+  w.Header().Add( "Content-Type", "application/json" )
 
   json.NewEncoder(w).Encode( result )
 }
