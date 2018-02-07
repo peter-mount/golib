@@ -25,7 +25,7 @@ func (r *Rest) Send() {
     accept := r.GetHeader( "Accept" )
     isXml := accept == TEXT_XML || accept == APPLICATION_XML
     isJson := accept == TEXT_JSON || accept == APPLICATION_JSON
-    
+
     // Ensure we have a valid contentType default to APPLICATION_JSON if not
     if !isXml && !isJson {
       accept = APPLICATION_JSON
@@ -34,6 +34,9 @@ func (r *Rest) Send() {
 
     // Force the Content-Type
     r.AddHeader( "Content-Type", accept )
+
+    // Until we get CORS handling correctly
+    r.AddHeader( "Access-Control-Allow-Origin", "*" )
 
     // Write the headers
     h := r.writer.Header()
