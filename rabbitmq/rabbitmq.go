@@ -45,6 +45,10 @@ func (s *RabbitMQ) exchange() string {
 
 // Connect connects to the RabbitMQ instace thats been configured.
 func (s *RabbitMQ) Connect( ) {
+  if s.connection != nil {
+    return
+  }
+  
   log.Println( "Connecting to amqp" )
 
   var heartBeat = s.HeartBeat
