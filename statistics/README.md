@@ -92,6 +92,13 @@ StatsHandler installs a github.com/gorilla/mux handler under the path /stats
 which exposes the current statistics & any history via a simple HTTP GET
 request.
 
+#### func  StatsRestHandler
+
+```go
+func StatsRestHandler(w http.ResponseWriter, r *http.Request)
+```
+Handler for /stats
+
 #### type Statistic
 
 ```go

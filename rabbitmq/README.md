@@ -31,34 +31,40 @@ type RabbitMQ struct {
 #### func (*RabbitMQ) Connect
 
 ```go
-func (s *RabbitMQ) Connect()
+func (s *RabbitMQ) Connect() error
 ```
 Connect connects to the RabbitMQ instace thats been configured.
 
 #### func (*RabbitMQ) Consume
 
 ```go
-func (r *RabbitMQ) Consume(queue, consumer string, autoAck, exclusive, noLocal, noWait bool, args amqp.Table) (<-chan amqp.Delivery, error)
+func (r *RabbitMQ) Consume(channel *amqp.Channel, queue, consumer string, autoAck, exclusive, noLocal, noWait bool, args amqp.Table) (<-chan amqp.Delivery, error)
 ```
 Consume adds a consumer to the queue and returns a GO channel
+
+#### func (*RabbitMQ) NewChannel
+
+```go
+func (s *RabbitMQ) NewChannel() (*amqp.Channel, error)
+```
 
 #### func (*RabbitMQ) Publish
 
 ```go
-func (s *RabbitMQ) Publish(routingKey string, msg []byte)
+func (s *RabbitMQ) Publish(routingKey string, msg []byte) error
 ```
 Publish a message
 
 #### func (*RabbitMQ) QueueBind
 
 ```go
-func (r *RabbitMQ) QueueBind(name, key, exchange string, noWait bool, args amqp.Table) error
+func (r *RabbitMQ) QueueBind(channel *amqp.Channel, name, key, exchange string, noWait bool, args amqp.Table) error
 ```
 QueueBind binds a queue to an exchange & routingKey
 
 #### func (*RabbitMQ) QueueDeclare
 
 ```go
-func (r *RabbitMQ) QueueDeclare(name string, durable, autoDelete, exclusive, noWait bool, args amqp.Table) (amqp.Queue, error)
+func (r *RabbitMQ) QueueDeclare(channel *amqp.Channel, name string, durable, autoDelete, exclusive, noWait bool, args amqp.Table) (amqp.Queue, error)
 ```
 QueueDeclare declares a queue
