@@ -114,18 +114,15 @@ func (s *RabbitMQ) Publish( routingKey string, msg []byte ) error {
 
 // QueueDeclare declares a queue
 func (r *RabbitMQ) QueueDeclare( channel *amqp.Channel, name string, durable, autoDelete, exclusive, noWait bool, args amqp.Table) (amqp.Queue, error) {
-  log.Println( "QueueDeclare", name )
   return channel.QueueDeclare(name, durable, autoDelete, exclusive, noWait, args)
 }
 
 // QueueBind binds a queue to an exchange & routingKey
 func (r *RabbitMQ) QueueBind( channel *amqp.Channel, name, key, exchange string, noWait bool, args amqp.Table) error {
-  log.Println( "QueueBind", name )
   return channel.QueueBind(name, key, exchange, noWait, args)
 }
 
 // Consume adds a consumer to the queue and returns a GO channel
 func (r *RabbitMQ) Consume( channel *amqp.Channel, queue, consumer string, autoAck, exclusive, noLocal, noWait bool, args amqp.Table) (<-chan amqp.Delivery, error) {
-  log.Println( "Consume", queue )
   return channel.Consume( queue, consumer, autoAck, exclusive, noLocal, noWait, args )
 }
