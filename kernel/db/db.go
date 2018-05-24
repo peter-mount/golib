@@ -5,7 +5,7 @@ import (
   _ "github.com/lib/pq"
   "fmt"
   "flag"
-  "kernel"
+  "github.com/peter-mount/golib/kernel"
   "log"
 )
 
