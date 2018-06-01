@@ -6,7 +6,6 @@ import (
   "fmt"
   "flag"
   "github.com/peter-mount/golib/kernel"
-  "log"
 )
 
 // database/sql bound with github.com/lib/pq as a Kernel Service
@@ -32,7 +31,6 @@ func (s *DBService) PostInit() error {
 }
 
 func (s *DBService) Start() error {
-  log.Printf( "Connecting to %s", *s.postgresURI )
   db, err := sql.Open( "postgres", *s.postgresURI )
   if err != nil {
     return err
@@ -43,7 +41,6 @@ func (s *DBService) Start() error {
 
 func (s *DBService) Stop() {
   if s.db != nil {
-    log.Printf( "Closing %s", *s.postgresURI )
 
     s.db.Close()
     s.db = nil
@@ -51,6 +48,5 @@ func (s *DBService) Stop() {
 }
 
 func (s *DBService) GetDB() *sql.DB {
-  log.Println( s.db )
   return s.db
 }
