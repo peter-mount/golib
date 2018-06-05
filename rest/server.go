@@ -22,29 +22,30 @@ type Server struct {
   // The permitted methods
   Methods     []string
   // Port to listen to
-  port    int
+  Port          int
   // The mux Router
-  router  *mux.Router
+  router       *mux.Router
+  // Base Context
+  ctx          *ServerContext
 }
 
-// Create a new Server with the specified port
-func NewServer( port int ) *Server {
-  s := &Server{}
+func (a *Server) Name() string {
+  return "Rest Server"
+}
 
+func (s *Server) PostInit() error {
+  s.router = mux.NewRouter()
+  s.ctx = &ServerContext{ context: "", server: s }
+  return nil
+}
+
+func (s *Server) Run() error {
   // If not defined then use port 80
+  port := s.Port
   if port < 1 || port > 65534 {
-    s.port = 8080
-  } else {
-    s.port = port
+    port = 8080
   }
 
-  s.router = mux.NewRouter()
-
-  return s
-}
-
-// Start starts the server
-func (s *Server) Start() error {
   // The permitted headers
   if len( s.Headers ) == 0 {
     s.Headers = []string{"X-Requested-With", "Content-Type"}
@@ -60,6 +61,6 @@ func (s *Server) Start() error {
   methodsOk := handlers.AllowedMethods( s.Methods )
   handler := handlers.CORS( originsOk, headersOk, methodsOk )( s.router )
 
-  log.Printf( "Listening on port %d\n", s.port )
-  return http.ListenAndServe( fmt.Sprintf( ":%d", s.port ), handler )
+  log.Printf( "Listening on port %d\n", port )
+  return http.ListenAndServe( fmt.Sprintf( ":%d", port ), handler )
 }

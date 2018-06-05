@@ -10,21 +10,15 @@ type ServerContext struct {
   server   *Server
 }
 
-// Conext creates a new ServerContext which allows groups of endpoints to be
-// managed with a common base path
-func (s *Server) Context( context string ) *ServerContext {
-  if context != "" && context[0:1] != "/" {
-    context = "/" + context
-  }
-
-  return &ServerContext{ context: context, server: s }
-}
-
 // Context creates a new ServerContext based on the current instance.
 // The new Context will be the existing one suffixed with the new one.
 // This allows for further grouping of rest services.
 //
 func (c *ServerContext) Context( context string ) *ServerContext {
+  if context == "" {
+    return c
+  }
+  
   if context != "" && context[0:1] != "/" {
     context = "/" + context
   }
