@@ -10,7 +10,7 @@ properties([
 
 node( 'Build' ) {
   stage( 'prepare' ) {
-    sh 'docker build -t golib:build --target build'
+    sh 'docker build -t golib:build --target build .'
   }
 
   [
