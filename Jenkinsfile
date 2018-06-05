@@ -10,6 +10,7 @@ properties([
 
 node( 'Build' ) {
   stage( 'prepare' ) {
+    checkout scm
     sh 'docker build -t golib:build --target build .'
   }
 
