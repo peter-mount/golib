@@ -8,18 +8,20 @@ properties([
   ])
 ])
 
-stage( 'prepare' ) {
-  sh 'docker build -t golib:build --target build'
-}
+node( 'Build' ) {
+  stage( 'prepare' ) {
+    sh 'docker build -t golib:build --target build'
+  }
 
-[
-  'codec', 'kernel', 'rabbitmq', 'rest', 'statistics'
-].each {
-  moduleName ->
-    stage( moduleName ) {
-      sh 'docker build' +
-         ' -t golib:' + moduleName +
-         ' --build-arg moduleName=' + moduleName +
-         ' .'
-    }
+  [
+    'codec', 'kernel', 'rabbitmq', 'rest', 'statistics'
+  ].each {
+    moduleName ->
+      stage( moduleName ) {
+        sh 'docker build' +
+           ' -t golib:' + moduleName +
+           ' --build-arg moduleName=' + moduleName +
+           ' .'
+      }
+  }
 }
