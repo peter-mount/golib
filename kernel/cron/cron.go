@@ -6,7 +6,7 @@ package cron
 
 import (
   crn "gopkg.in/robfig/cron.v2"
-  "kernel"
+  "github.com/peter-mount/golib/kernel"
 )
 
 // gopkg.in/robfig/crn.v2 as a Kernel Service
