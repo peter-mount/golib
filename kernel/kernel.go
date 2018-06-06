@@ -87,11 +87,13 @@ func NewKernel() *Kernel {
 // Launch is a convenience method to launch a single service.
 // This does the boiler plate work and requires the single service adds any
 // dependencies within it's Init() method, if any
-func Launch( s Service ) error {
+func Launch( services ...Service ) error {
   k := NewKernel()
 
-  if _, err := k.AddService( s ); err != nil {
-    return err
+  for _, s := range services {
+    if _, err := k.AddService( s ); err != nil {
+      return err
+    }
   }
 
   return k.Run()
