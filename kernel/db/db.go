@@ -20,7 +20,7 @@ func (s *DBService) Name() string {
 }
 
 func (s *DBService) Init( k *kernel.Kernel ) error {
-  s.postgresURI = flag.String( "d", "", "The database to connect to" )
+  s.postgresURI = flag.String( "db", "", "The database to connect to" )
   return nil
 }
 
