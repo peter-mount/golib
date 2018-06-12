@@ -6,6 +6,7 @@ import (
   "fmt"
   "flag"
   "github.com/peter-mount/golib/kernel"
+  "os"
 )
 
 // database/sql bound with github.com/lib/pq as a Kernel Service
@@ -24,6 +25,9 @@ func (s *DBService) Init( k *kernel.Kernel ) error {
 }
 
 func (s *DBService) PostInit() error {
+  if *s.postgresURI == "" {
+    *s.postgresURI = os.Getenv( "POSTGRESDB" )
+  }
   if *s.postgresURI == "" {
     return fmt.Errorf( "No database uri provided" )
   }
