@@ -15,7 +15,13 @@ node( 'Build' ) {
   }
 
   [
-    'codec', 'kernel', 'rabbitmq', 'rest', 'statistics'
+    'codec',
+    'kernel',
+    'kernel/cron',
+    'kernel/db',
+    'rabbitmq',
+    'rest',
+    'statistics'
   ].each {
     moduleName ->
       stage( moduleName ) {

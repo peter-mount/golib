@@ -19,17 +19,12 @@ ENV GOOS=linux
 
 # Ensure we have the libraries - docker will cache these between builds
 RUN go get -v \
-      flag \
       github.com/gorilla/handlers \
       github.com/gorilla/mux \
+      github.com/lib/pq \
       github.com/streadway/amqp \
       gopkg.in/robfig/cron.v2 \
-      gopkg.in/yaml.v2 \
-      io/ioutil \
-      log \
-      net/http \
-      path/filepath \
-      time
+      gopkg.in/yaml.v2
 
 # Import the source and compile
 WORKDIR /go/src/github.com/peter-mount/golib
