@@ -26,7 +26,7 @@ node( 'Build' ) {
     moduleName ->
       stage( moduleName ) {
         sh 'docker build' +
-           ' -t golib:' + moduleName +
+           ' -t golib:test' +
            ' --build-arg moduleName=' + moduleName +
            ' .'
       }
