@@ -11,6 +11,15 @@ const (
   STATS_HISTORY_PERIOD = 5
 )
 
+// Recorder allows an external service to be plugged in to receive statistics
+// once they have been collected
+type Recorder interface {
+  // PublishStatistic accepts a statistic for external processing, usually
+  // publishing to rabbitmq or statsd etc.
+  // The passed Statistic is a copy so modifying it will not affect the stats.
+  PublishStatistic( *Statistic )
+}
+
 func (s *Statistic) recordHistory() {
   // Add to last 5 entries
   s.latest = s.clone()
@@ -51,14 +60,29 @@ func (value *Statistic) logState() {
 }
 
 // Record then reset all Statistics
-func statsRecord() {
+func (s *Statistics) statsRecord() {
   mutex.Lock()
+  defer mutex.Unlock()
+
+  var publish []*Statistic
 
   for _, value := range stats {
     value.logState()
     value.recordHistory()
     value.reset()
+
+    // Append to publish list if we have a latest value
+    if s.Recorder != nil && value.latest != nil {
+      publish = append( publish, value.latest.clone() )
+    }
   }
 
-  mutex.Unlock()
+  // Publish any to the optional external recorder
+  if s.Recorder != nil && len( publish ) > 0 {
+    go func() {
+      for _, value := range publish {
+        s.Recorder.PublishStatistic( value )
+      }
+    }()
+  }
 }

@@ -58,7 +58,9 @@ type Statistics struct {
   Schedule    string
   // The Cron instance in use. Either provide this before calling Configure()
   // or one will be created for you.
-  Cron        *cron.Cron
+  Cron       *cron.Cron
+  // External function to call for each statistic once they have been recorded
+  Recorder    Recorder
 }
 
 // Configure takes a Statistics instance and configures the system to use that
@@ -80,7 +82,7 @@ func (s *Statistics) Configure() {
   }
 
   // Schedule the recorder service
-  s.Cron.AddFunc( schedule, statsRecord )
+  s.Cron.AddFunc( schedule, s.statsRecord )
 }
 
 // return a statistic creating it as needed
@@ -110,16 +112,16 @@ func Decr( n string ) {
 // The count field is also incremented by 1.
 func IncrVal( n string, v int64 ) {
   mutex.Lock()
+  defer mutex.Unlock()
   getOrCreate( n ).incr( v )
-  mutex.Unlock()
 }
 
 // Set sets the value of a named statistic.
 // The count field is also incremented by 1.
 func Set( n string, v int64 ) {
   mutex.Lock()
+  defer mutex.Unlock()
   getOrCreate( n ).set( v )
-  mutex.Unlock()
 }
 
 // Get returns a Statistic instance based on the current value.
@@ -129,6 +131,7 @@ func Get( n string ) *Statistic {
   var stat *Statistic
 
   mutex.Lock()
+  defer mutex.Unlock()
 
   val, ok := stats[n]
 
@@ -139,8 +142,6 @@ func Get( n string ) *Statistic {
       stat =  val.clone()
     }
   }
-
-  mutex.Unlock()
 
   return stat
 }
