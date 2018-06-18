@@ -17,7 +17,7 @@ type Recorder interface {
   // PublishStatistic accepts a statistic for external processing, usually
   // publishing to rabbitmq or statsd etc.
   // The passed Statistic is a copy so modifying it will not affect the stats.
-  PublishStatistic( *Statistic )
+  PublishStatistic( string, *Statistic )
 }
 
 func (s *Statistic) recordHistory() {
@@ -81,7 +81,7 @@ func (s *Statistics) statsRecord() {
   if s.Recorder != nil && len( publish ) > 0 {
     go func() {
       for _, value := range publish {
-        s.Recorder.PublishStatistic( value )
+        s.Recorder.PublishStatistic( value.name, value )
       }
     }()
   }
