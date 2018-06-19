@@ -17,6 +17,7 @@ node( 'Build' ) {
   [
     'codec',
     'kernel',
+    'kernel/bolt',
     'kernel/cron',
     'kernel/db',
     'rabbitmq',

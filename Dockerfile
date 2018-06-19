@@ -19,6 +19,7 @@ ENV GOOS=linux
 
 # Ensure we have the libraries - docker will cache these between builds
 RUN go get -v \
+      github.com/coreos/bbolt/... \
       github.com/gorilla/handlers \
       github.com/gorilla/mux \
       github.com/lib/pq \
