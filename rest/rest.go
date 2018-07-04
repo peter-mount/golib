@@ -17,7 +17,7 @@ type Rest struct {
   status        int
   // The value to send
   value         interface{}
-  reader        func(io.Reader) error
+  source        func(io.Writer) error
   // Response headers
   headers       map[string]string
   // true if Send() has been called
@@ -66,8 +66,8 @@ func (r *Rest) Value( value interface{} ) *Rest {
 }
 
 // Value sets the response value
-func (r *Rest) Reader( rdr io.Reader ) *Rest {
-  r.reader = rdr
+func (r *Rest) Writer( w func( io.Writer ) error ) *Rest {
+  r.source = w
   return r
 }
 

@@ -63,8 +63,8 @@ func (r *Rest) Send() error {
   r.writer.WriteHeader( r.status )
 
   // Write from a reader
-  if r.reader != nil {
-    err := r.reader( r.writer )
+  if r.source != nil {
+    err := r.source( r.writer )
     log.Printf( "copy: %v %v", err )
     return err
   } else if r.value != nil {
