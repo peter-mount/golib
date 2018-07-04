@@ -25,34 +25,7 @@ func (r *Rest) Send() error {
   if( r.sent ) {
     return resposeUsed
   }
-  return r.send( nil )
-}
 
-// Write allows a functon to be called with a writer which can be used to
-// stream a response back to the client
-func (r *Rest) Write( f func( r *Rest, w io.Writer ) error ) (err error) {
-  if( r.sent ) {
-    return resposeUsed
-  }
-
-  rdr, wtr := io.Pipe()
-  defer wtr.Close()
-  defer rdr.Close()
-
-  go func() {
-    err = r.send( rdr )
-  }()
-
-  err = f( r, wtr )
-  if err != nil {
-    wtr.CloseWithError( err )
-  }
-  
-  return err
-}
-
-// common send code
-func (r *Rest) send( reader io.Reader ) error {
   r.sent = true
 
   if r.status <= 0 {
@@ -89,8 +62,8 @@ func (r *Rest) send( reader io.Reader ) error {
   r.writer.WriteHeader( r.status )
 
   // Write from a reader
-  if reader != nil {
-    _, err := io.Copy( r.writer, reader )
+  if r.reader != nil {
+    _, err := io.Copy( r.writer, r.reader )
     return err
   } else if r.value != nil {
     // Finally the content, encode if an object

@@ -2,6 +2,7 @@ package rest
 
 import (
   "github.com/gorilla/mux"
+  "io"
   "net/http"
 )
 
@@ -16,6 +17,7 @@ type Rest struct {
   status        int
   // The value to send
   value         interface{}
+  reader        io.Reader
   // Response headers
   headers       map[string]string
   // true if Send() has been called
@@ -60,6 +62,12 @@ func (r *Rest) Status( status int ) *Rest {
 // Value sets the response value
 func (r *Rest) Value( value interface{} ) *Rest {
   r.value = value
+  return r
+}
+
+// Value sets the response value
+func (r *Rest) Reader( rdr io.Reader ) *Rest {
+  r.reader = rdr
   return r
 }
 
