@@ -65,8 +65,8 @@ func (r *Rest) Send() error {
 
   // Write from a reader
   if r.reader != nil {
-    l, err := io.Copy( r.writer, r.reader )
-    log.Printf( "copy: %v %v", l, err )
+    err := r.reader( r.writer )
+    log.Printf( "copy: %v %v", err )
     return err
   } else if r.value != nil {
     // Finally the content, encode if an object

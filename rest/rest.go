@@ -17,7 +17,7 @@ type Rest struct {
   status        int
   // The value to send
   value         interface{}
-  reader        io.Reader
+  reader        func(io.Reader) error
   // Response headers
   headers       map[string]string
   // true if Send() has been called
