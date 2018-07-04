@@ -11,6 +11,7 @@ const (
   APPLICATION_JSON string = "application/json"
   APPLICATION_XML string = "application/xml"
   TEXT_JSON string = "text/json"
+  TEXT_HTML string = "text/html"
   TEXT_XML string = "text/xml"
 )
 

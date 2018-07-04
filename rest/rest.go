@@ -71,6 +71,16 @@ func (r *Rest) Reader( rdr io.Reader ) *Rest {
   return r
 }
 
+// Value sets the response value
+func (r *Rest) ContentType( c string ) *Rest {
+  r.contentType = c
+  return r
+}
+
+func (r *Rest) HTML( c string ) *Rest { return r.ContentType( TEXT_HTML ) }
+func (r *Rest) JSON( c string ) *Rest { return r.ContentType( APPLICATION_JSON ) }
+func (r *Rest) XML( c string ) *Rest { return r.ContentType( APPLICATION_XML ) }
+
 // Context returns the base context for this request
 func (r *Rest) Context() string {
   return r.context
