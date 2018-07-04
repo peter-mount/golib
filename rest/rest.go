@@ -77,9 +77,9 @@ func (r *Rest) ContentType( c string ) *Rest {
   return r
 }
 
-func (r *Rest) HTML( c string ) *Rest { return r.ContentType( TEXT_HTML ) }
-func (r *Rest) JSON( c string ) *Rest { return r.ContentType( APPLICATION_JSON ) }
-func (r *Rest) XML( c string ) *Rest { return r.ContentType( APPLICATION_XML ) }
+func (r *Rest) HTML() *Rest { return r.ContentType( TEXT_HTML ) }
+func (r *Rest) JSON() *Rest { return r.ContentType( APPLICATION_JSON ) }
+func (r *Rest) XML() *Rest { return r.ContentType( APPLICATION_XML ) }
 
 // Context returns the base context for this request
 func (r *Rest) Context() string {

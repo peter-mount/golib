@@ -5,6 +5,7 @@ import (
   "encoding/xml"
   "errors"
   "io"
+  "log"
 )
 
 const (
@@ -64,7 +65,8 @@ func (r *Rest) Send() error {
 
   // Write from a reader
   if r.reader != nil {
-    _, err := io.Copy( r.writer, r.reader )
+    l, err := io.Copy( r.writer, r.reader )
+    log.Printf( "copy: %v %v", l, err )
     return err
   } else if r.value != nil {
     // Finally the content, encode if an object
