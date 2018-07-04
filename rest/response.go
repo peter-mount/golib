@@ -39,17 +39,15 @@ func (r *Rest) Write( f func( r *Rest, w io.Writer ) error ) (err error) {
   defer wtr.Close()
   defer rdr.Close()
 
-  // In a separate goroutine call the function to write the output
   go func() {
-    err = f( r, wtr )
-    if err != nil {
-      wtr.CloseWithError( err )
-    }
+    err = r.send( rdr )
   }()
 
-  // Write the response. This will block against the function
-  err = r.send( rdr )
-
+  err = f( r, wtr )
+  if err != nil {
+    wtr.CloseWithError( err )
+  }
+  
   return err
 }
 
