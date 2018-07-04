@@ -4,7 +4,7 @@ import (
   "encoding/json"
   "encoding/xml"
   "errors"
-  "log"
+  "io"
 )
 
 const (
@@ -63,9 +63,8 @@ func (r *Rest) Send() error {
   r.writer.WriteHeader( r.status )
 
   // Write from a reader
-  if r.source != nil {
-    err := r.source( r.writer )
-    log.Printf( "copy: %v %v", err )
+  if r.reader != nil {
+    _, err := io.Copy( r.writer, r.reader )
     return err
   } else if r.value != nil {
     // Finally the content, encode if an object

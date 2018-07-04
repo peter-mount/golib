@@ -17,7 +17,7 @@ type Rest struct {
   status        int
   // The value to send
   value         interface{}
-  source        func(io.Writer) error
+  reader        io.Reader
   // Response headers
   headers       map[string]string
   // true if Send() has been called
@@ -66,8 +66,8 @@ func (r *Rest) Value( value interface{} ) *Rest {
 }
 
 // Value sets the response value
-func (r *Rest) Writer( w func( io.Writer ) error ) *Rest {
-  r.source = w
+func (r *Rest) Reader( rdr io.Reader ) *Rest {
+  r.reader = rdr
   return r
 }
 
@@ -77,8 +77,11 @@ func (r *Rest) ContentType( c string ) *Rest {
   return r
 }
 
+// HTML forces the response to be html
 func (r *Rest) HTML() *Rest { return r.ContentType( TEXT_HTML ) }
+// JSON forces the response to be JSON
 func (r *Rest) JSON() *Rest { return r.ContentType( APPLICATION_JSON ) }
+// XML forces the response to be XML
 func (r *Rest) XML() *Rest { return r.ContentType( APPLICATION_XML ) }
 
 // Context returns the base context for this request
