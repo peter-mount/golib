@@ -71,6 +71,17 @@ func (r *Rest) Reader( rdr io.Reader ) *Rest {
   return r
 }
 
+// Writer returns a io.Writer to write the response
+func (r *Rest) Writer() io.Writer {
+  // Clear any values
+  r.value = nil
+  r.reader = nil
+  // Force a send so headers are sent
+  r.Send()
+  // Return the underlying writer
+  return r.writer
+}
+
 // Value sets the response value
 func (r *Rest) ContentType( c string ) *Rest {
   r.contentType = c
