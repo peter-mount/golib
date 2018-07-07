@@ -42,3 +42,8 @@ func Handler( f func( *Rest ) error ) func( w http.ResponseWriter, r *http.Reque
     }
   }
 }
+
+// NotFound Adds a custom NotFound handler
+func (s *Server) NotFound( f func( *Rest ) error ) {
+  s.router.NotFoundHandler = http.HandlerFunc( Handler( f ) )
+}
