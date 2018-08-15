@@ -6,7 +6,7 @@ import (
 )
 
 func (tx *Tx) SetEncoding( enc string ) error {
-  _, err = tx.Exec( "SET CLIENT_ENCODING TO " + enc )
+  _, err := tx.Exec( "SET CLIENT_ENCODING TO " + enc )
   return err
 }
 
