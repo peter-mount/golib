@@ -13,6 +13,8 @@ import (
 type DBService struct {
   postgresURI      *string
   db               *sql.DB
+  // Set to true to enable additional debugging
+  Debug             bool
 }
 
 func (s *DBService) Name() string {
@@ -51,6 +53,21 @@ func (s *DBService) Stop() {
   }
 }
 
+// GetDB returns the underlying sql.DB
 func (s *DBService) GetDB() *sql.DB {
   return s.db
+}
+
+func (s *DBService) Exec(query string, args ...interface{}) (sql.Result, error) {
+  r, e := s.db.Exec(query, args... )
+  return r, e
+}
+
+func (s *DBService) Query(query string, args ...interface{}) (*sql.Rows, error) {
+  r, e := s.db.Query(query, args... )
+  return r, e
+}
+
+func (s *DBService) QueryRow(query string, args ...interface{}) *sql.Row {
+  return s.db.QueryRow(query, args...)
 }
