@@ -77,18 +77,12 @@ type Kernel struct {
   readOnly        bool
 }
 
-// NewKernel creates a new Kernel
-func NewKernel() *Kernel {
-  k := &Kernel{}
-  k.dependencies = make( map[string]interface{} )
-  return k
-}
-
 // Launch is a convenience method to launch a single service.
 // This does the boiler plate work and requires the single service adds any
 // dependencies within it's Init() method, if any
 func Launch( services ...Service ) error {
-  k := NewKernel()
+  k := &Kernel{}
+  k.dependencies = make( map[string]interface{} )
 
   for _, s := range services {
     if _, err := k.AddService( s ); err != nil {
@@ -96,7 +90,7 @@ func Launch( services ...Service ) error {
     }
   }
 
-  return k.Run()
+  return k.run()
 }
 
 // AddService adds a service to the kernel
@@ -135,7 +129,7 @@ func (k *Kernel) AddService( s Service ) ( Service, error ) {
 }
 
 // Run the kernel
-func (k *Kernel) Run() error {
+func (k *Kernel) run() error {
 
   if k.readOnly {
     return fmt.Errorf( "The Kernel has already been run" )
