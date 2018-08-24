@@ -90,6 +90,35 @@ func Launch( services ...Service ) error {
     }
   }
 
+  k.readOnly = true
+
+  flag.Parse()
+
+  if err := k.postinit(); err != nil {
+    return err
+  }
+
+  // Listen to signals & close the db before exiting
+  // SIGINT for ^C, SIGTERM for docker stopping the container
+  sigs := make( chan os.Signal, 1 )
+  signal.Notify( sigs, syscall.SIGINT, syscall.SIGTERM )
+  go func() {
+    sig := <-sigs
+    log.Println( "Signal", sig )
+
+    k.stop()
+
+    log.Println( "Application terminated" )
+
+    os.Exit( 0 )
+  }()
+
+  defer k.stop()
+
+  if err := k.start(); err != nil {
+    return err
+  }
+
   return k.run()
 }
 
@@ -126,44 +155,6 @@ func (k *Kernel) AddService( s Service ) ( Service, error ) {
   k.services = append( k.services, s )
 
   return s, nil
-}
-
-// Run the kernel
-func (k *Kernel) run() error {
-
-  if k.readOnly {
-    return fmt.Errorf( "The Kernel has already been run" )
-  }
-  k.readOnly = true
-
-  flag.Parse()
-
-  if err := k.postinit(); err != nil {
-    return err
-  }
-
-  // Listen to signals & close the db before exiting
-  // SIGINT for ^C, SIGTERM for docker stopping the container
-  sigs := make( chan os.Signal, 1 )
-  signal.Notify( sigs, syscall.SIGINT, syscall.SIGTERM )
-  go func() {
-    sig := <-sigs
-    log.Println( "Signal", sig )
-
-    k.stop()
-
-    log.Println( "Application terminated" )
-
-    os.Exit( 0 )
-  }()
-
-  defer k.stop()
-
-  if err := k.start(); err != nil {
-    return err
-  }
-
-  return k.run()
 }
 
 func (k *Kernel) postinit() error {
