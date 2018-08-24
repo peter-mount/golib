@@ -22,7 +22,8 @@ node( 'Build' ) {
     'kernel/db',
     'rabbitmq',
     'rest',
-    'statistics'
+    'statistics',
+    'sqlutils'
   ].each {
     moduleName ->
       stage( moduleName ) {
