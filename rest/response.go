@@ -64,6 +64,10 @@ func (r *Rest) Send() error {
 
   // Write from a reader
   if r.reader != nil {
+    if closer, ok := r.reader.(io.ReadCloser); ok {
+      defer closer.Close()
+    }
+
     _, err := io.Copy( r.writer, r.reader )
     return err
   } else if r.value != nil {
