@@ -33,21 +33,21 @@ func (r *Rest) Send() error {
     r.status = 200
   }
 
-  accept := r.GetHeader( "Accept" )
-  isXml := accept == TEXT_XML || accept == APPLICATION_XML
-  isJson := accept == TEXT_JSON || accept == APPLICATION_JSON
+  // Force the Content-Type if the response contentType is not set
+  if r.contentType == "" {
+    r.contentType = r.GetHeader( "Accept" )
+  }
+  if r.contentType == "" {
+    r.contentType = APPLICATION_JSON
+  }
+  r.AddHeader( "Content-Type", r.contentType )
+
+  isXml := r.contentType == TEXT_XML || r.contentType == APPLICATION_XML
+  isJson := r.contentType == TEXT_JSON || r.contentType == APPLICATION_JSON
 
   // Ensure we have a valid contentType default to APPLICATION_JSON if not
   if !isXml && !isJson {
-    accept = APPLICATION_JSON
     isJson = true
-  }
-
-  // Force the Content-Type if the response contentType is not set
-  if r.contentType == "" {
-    r.AddHeader( "Content-Type", accept )
-  }else {
-    r.AddHeader( "Content-Type", r.contentType )
   }
 
   // Until we get CORS handling correctly
