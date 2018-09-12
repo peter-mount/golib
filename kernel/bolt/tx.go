@@ -92,3 +92,10 @@ func (t *Tx) DeleteBucket( name string ) error {
 func (t *Tx) OnCommit(fn func()) {
   t.tx.OnCommit(fn)
 }
+
+// ForEach iterates over all bucket names
+func (t *Tx) ForEach(fn func(k string, v *Bucket) error) error {
+  return t.tx.ForEach( func(k []byte, b *bbolt.Bucket ) error {
+    return fn( string(k[:]), &Bucket{tx: t, bucket: b} )
+  } )
+}
