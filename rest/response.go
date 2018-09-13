@@ -42,14 +42,6 @@ func (r *Rest) Send() error {
   }
   r.AddHeader( "Content-Type", r.contentType )
 
-  isXml := r.contentType == TEXT_XML || r.contentType == APPLICATION_XML
-  isJson := r.contentType == TEXT_JSON || r.contentType == APPLICATION_JSON
-
-  // Ensure we have a valid contentType default to APPLICATION_JSON if not
-  if !isXml && !isJson {
-    isJson = true
-  }
-
   // Until we get CORS handling correctly
   r.AddHeader( "Access-Control-Allow-Origin", "*" )
 
@@ -71,16 +63,24 @@ func (r *Rest) Send() error {
     _, err := io.Copy( r.writer, r.reader )
     return err
   } else if r.value != nil {
-    // Finally the content, encode if an object
-    if isXml {
-      return xml.NewEncoder( r.writer ).Encode( r.value )
-    } else if isJson {
-      return json.NewEncoder( r.writer ).Encode( r.value )
-    } else if ba, ok := r.value.([]byte); ok {
+    if ba, ok := r.value.([]byte); ok {
       _, err := r.writer.Write( ba )
       return err
     } else {
-      return errors.New( "Unsupported payload" )
+      // Finally the content, encode if an object
+
+      isXml := r.contentType == TEXT_XML || r.contentType == APPLICATION_XML
+      isJson := r.contentType == TEXT_JSON || r.contentType == APPLICATION_JSON
+
+      // Ensure we have a valid contentType default to APPLICATION_JSON if not
+      if !isXml && !isJson {
+        isJson = true
+      }
+      if isXml {
+        return xml.NewEncoder( r.writer ).Encode( r.value )
+      } else {
+        return json.NewEncoder( r.writer ).Encode( r.value )
+      }
     }
   }
 
