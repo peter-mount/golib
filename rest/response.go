@@ -74,8 +74,13 @@ func (r *Rest) Send() error {
     // Finally the content, encode if an object
     if isXml {
       return xml.NewEncoder( r.writer ).Encode( r.value )
-    } else {
+    } else if isJson {
       return json.NewEncoder( r.writer ).Encode( r.value )
+    } else if ba, ok := r.value.([]byte); ok {
+      _, err := r.writer.Write( ba )
+      return err
+    } else {
+      return errors.New( "Unsupported payload" )
     }
   }
 
