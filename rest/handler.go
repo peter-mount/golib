@@ -38,7 +38,10 @@ func Handler( f func( *Rest ) error ) func( w http.ResponseWriter, r *http.Reque
       w.WriteHeader( 500 )
     } else {
       // Send the response
-      rest.Send()
+      err := rest.Send()
+      if err != nil {
+        log.Println( err )
+      }
     }
   }
 }
