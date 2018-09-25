@@ -59,13 +59,11 @@ func (r *RestBuilder ) Build() *RestBuilder {
       route = r.server.router.NewRoute()
     }
 
+    route.Path( r.pathPrefix + path ).Handler( hf )
     r.applyOption( r.methods, route.Methods )
     r.applyOption( r.headers, route.Headers )
     r.applyOption( r.headersRegexp, route.HeadersRegexp )
     r.applyOption( r.queries, route.Queries )
-
-    route.Path( r.pathPrefix + path ).
-      Handler( hf )
   }
 
   return r.Reset()
