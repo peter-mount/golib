@@ -26,6 +26,9 @@ type Rest struct {
   vars          map[string]string
   // The context
   context       string
+  // request attributes which are used to allow data to be stored within the
+  // request whist it's being processed.
+  attributes    map[string]interface{}
 }
 
 // NewRest creates a new Rest query
@@ -98,4 +101,20 @@ func (r *Rest) XML() *Rest { return r.ContentType( APPLICATION_XML ) }
 // Context returns the base context for this request
 func (r *Rest) Context() string {
   return r.context
+}
+
+// Var returns the named route variable or "" if none
+func (r *Rest) GetAttribute(name string) (interface{}, bool) {
+  if r.attributes == nil {
+    return nil, false
+  }
+  v, e := r.attributes[ name ]
+  return v, e
+}
+
+func (r *Rest) SetAttribute( n string, v interface{} ) {
+  if r.attributes == nil {
+    r.attributes = make( map[string]interface{} )
+  }
+  r.attributes[ n ] = v
 }

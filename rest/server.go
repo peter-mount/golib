@@ -6,11 +6,15 @@
 package rest
 
 import (
+  "flag"
   "fmt"
   "github.com/gorilla/handlers"
   "github.com/gorilla/mux"
+  "github.com/peter-mount/golib/kernel"
   "log"
   "net/http"
+  "os"
+  "strconv"
 )
 
 // The internal config of a Server
@@ -23,6 +27,7 @@ type Server struct {
   Methods     []string
   // Port to listen to
   Port          int
+  port         *int
   // The mux Router
   router       *mux.Router
   // Base Context
@@ -33,7 +38,22 @@ func (a *Server) Name() string {
   return "Rest Server"
 }
 
+func (a *Server) Init( k *kernel.Kernel ) error {
+  a.port = flag.Int( "rest-port", 0, "Port to use for http" )
+  return nil
+}
+
 func (s *Server) PostInit() error {
+  if *s.port < 1 || *s.port > 65534 {
+    p, err := strconv.Atoi( os.Getenv( "RESTPORT" ) )
+    if err == nil {
+      *s.port = p
+    }
+  }
+  if *s.port >0 && *s.port < 65535 {
+    s.Port = *s.port
+  }
+
   s.router = mux.NewRouter()
   s.ctx = &ServerContext{ context: "", server: s }
   return nil
