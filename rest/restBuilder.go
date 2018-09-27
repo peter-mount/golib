@@ -51,22 +51,30 @@ func (r *RestBuilder ) Build() *RestBuilder {
   // The final handler
   hf := http.HandlerFunc( Handler( h ) )
 
-  for _, path := range r.paths {
-    var route *mux.Route
-    if r.pathPrefix != "" {
-      route = r.pathPrefixRoute.NewRoute()
-    } else {
-      route = r.server.router.NewRoute()
+  if len( r.paths ) == 0 {
+    // Rare but could happen - e.g. we are not matching against a path but a Header or Query string
+    r.buildRoute( r.newRoute().Handler( hf ) )
+  } else {
+    for _, path := range r.paths {
+      r.buildRoute( r.newRoute().Handler( hf ).Path( r.pathPrefix + path ) )
     }
-
-    route.Path( r.pathPrefix + path ).Handler( hf )
-    r.applyOption( r.methods, route.Methods )
-    r.applyOption( r.headers, route.Headers )
-    r.applyOption( r.headersRegexp, route.HeadersRegexp )
-    r.applyOption( r.queries, route.Queries )
   }
 
   return r.Reset()
+}
+
+func (r *RestBuilder) newRoute() *mux.Route {
+  if r.pathPrefix != "" {
+    return r.pathPrefixRoute.NewRoute()
+  }
+  return r.server.router.NewRoute()
+}
+
+func (r *RestBuilder) buildRoute( route *mux.Route ) {
+  r.applyOption( r.methods, route.Methods )
+  r.applyOption( r.headers, route.Headers )
+  r.applyOption( r.headersRegexp, route.HeadersRegexp )
+  r.applyOption( r.queries, route.Queries )
 }
 
 func (r *RestBuilder) applyOption( a []string, f func(...string) *mux.Route ) {
