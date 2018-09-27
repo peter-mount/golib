@@ -120,7 +120,7 @@ func (s *Server) Run() error {
         Handler: handler,
       }
 
-    // https = http/1.1 + TLS
+    // https = http/1.1 + TLS but http/2 is disabled
     case "https":
       serveTls = true
       server = &http.Server{
@@ -129,21 +129,26 @@ func (s *Server) Run() error {
         // This disables http/2 support
         TLSNextProto: map[string]func(*http.Server, *tls.Conn, http.Handler){},
       }
-      //server.TLSNextProto = nil
-    // h2 = http/2 + TLS
+
+    // h2 = http/2 + TLS (also http/1.1 + TLS supported)
     case "h2":
       serveTls = true
       server = &http.Server{
         Addr: bindingAddress,
         Handler: handler,
       }
+
     // h2c = http/2 with NO TLS
+    //
+    // See https://godoc.org/golang.org/x/net/http2/h2c#example-NewHandler
     case "h2c":
       serveTls = false
       server = &http.Server{
         Addr: bindingAddress,
         Handler: h2c.NewHandler( handler, &http2.Server{} ),
       }
+
+    // Should not occur unless we start supporting alternate protocols
     default:
       return fmt.Errorf( "Protocol %s is currently unsupported", *s.protocol )
   }
