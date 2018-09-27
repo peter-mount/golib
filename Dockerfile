@@ -25,6 +25,7 @@ RUN go get -v \
       github.com/lib/pq \
       github.com/peter-mount/sortfold \
       github.com/streadway/amqp \
+      golang.org/x/net/http2/... \
       gopkg.in/robfig/cron.v2 \
       gopkg.in/yaml.v2
 
