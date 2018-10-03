@@ -23,6 +23,7 @@ RUN go get -v \
       github.com/gorilla/handlers \
       github.com/gorilla/mux \
       github.com/lib/pq \
+      github.com/peter-mount/go.uuid \
       github.com/peter-mount/sortfold \
       github.com/streadway/amqp \
       golang.org/x/net/http2/... \

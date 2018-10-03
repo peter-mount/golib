@@ -18,7 +18,6 @@ import (
   "net/http"
   "os"
   "strconv"
-  "time"
 )
 
 // The internal config of a Server
@@ -88,10 +87,16 @@ func (s *Server) PostInit() error {
   s.ctx = &ServerContext{ context: "", server: s }
 
   if *s.logConsole {
-    s.router.Use( consoleLogger )
+    s.router.Use( ConsoleLogger() )
   }
 
   return nil
+}
+
+// Use adds a MiddlewareHandler to the server.
+// E.g. server.Use( ConsoleLogger )
+func (s *Server) Use( handler mux.MiddlewareFunc ) {
+  s.router.Use( handler )
 }
 
 func (s *Server) Run() error {
@@ -168,16 +173,4 @@ func (s *Server) Run() error {
   } else {
     return server.ListenAndServe()
   }
-}
-
-func consoleLogger( next http.Handler ) http.Handler {
-  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    start := time.Now()
-    defer func(){
-      end := time.Now()
-      elapsed := end.Sub( start )
-      log.Printf( "%s:%v:%v", r.Method, r.URL, elapsed )
-    }()
-    next.ServeHTTP(w, r)
-  })
 }
