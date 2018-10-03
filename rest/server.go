@@ -12,12 +12,13 @@ import (
   "github.com/gorilla/handlers"
   "github.com/gorilla/mux"
   "github.com/peter-mount/golib/kernel"
+  "golang.org/x/net/http2"
+  "golang.org/x/net/http2/h2c"
   "log"
   "net/http"
   "os"
   "strconv"
-  "golang.org/x/net/http2"
-  "golang.org/x/net/http2/h2c"
+  "time"
 )
 
 // The internal config of a Server
@@ -39,6 +40,8 @@ type Server struct {
   protocol     *string
   certFile     *string
   keyFile      *string
+  // Logging
+  logConsole   *bool
 }
 
 func (a *Server) Name() string {
@@ -46,6 +49,7 @@ func (a *Server) Name() string {
 }
 
 func (a *Server) Init( k *kernel.Kernel ) error {
+  a.logConsole = flag.Bool( "rest-log", false, "Log requests to console" )
   a.protocol = flag.String( "rest-protocol", "http", "Protocol to use: http|https|h2|h2c")
   a.port = flag.Int( "rest-port", 0, "Port to use for http" )
   a.certFile = flag.String( "rest-cert", "", "TLS Certificate File")
@@ -82,6 +86,11 @@ func (s *Server) PostInit() error {
 
   s.router = mux.NewRouter()
   s.ctx = &ServerContext{ context: "", server: s }
+
+  if *s.logConsole {
+    s.router.Use( consoleLogger )
+  }
+
   return nil
 }
 
@@ -159,4 +168,16 @@ func (s *Server) Run() error {
   } else {
     return server.ListenAndServe()
   }
+}
+
+func consoleLogger( next http.Handler ) http.Handler {
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    start := time.Now()
+    defer func(){
+      end := time.Now()
+      elapsed := end.Sub( start )
+      log.Printf( "%s:%v:%v", r.Method, r.URL, elapsed )
+    }()
+    next.ServeHTTP(w, r)
+  })
 }
