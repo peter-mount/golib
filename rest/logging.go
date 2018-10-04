@@ -22,7 +22,7 @@ func ConsoleLogger() mux.MiddlewareFunc {
 
 // LogLogger returns a middleware function to log requests to a specific logger
 func LogLogger( l *log.Logger ) mux.MiddlewareFunc {
-  return FormatLogger( log.Printf )
+  return FormatLogger( l.Printf )
 }
 
 type FormatLoggerFunc func( string, ...interface{})
