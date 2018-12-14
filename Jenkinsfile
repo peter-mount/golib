@@ -14,23 +14,7 @@ node( 'Build' ) {
     sh 'docker build -t golib:build --target build .'
   }
 
-  [
-    'codec',
-    'kernel',
-    'kernel/bolt',
-    'kernel/cron',
-    'kernel/db',
-    'rabbitmq',
-    'rest',
-    'statistics',
-    'sqlutils'
-  ].each {
-    moduleName ->
-      stage( moduleName ) {
-        sh 'docker build' +
-           ' -t golib:test' +
-           ' --build-arg moduleName=' + moduleName +
-           ' .'
-      }
+  stage( "build" ) {
+    sh 'docker build -t golib:test .'
   }
 }
