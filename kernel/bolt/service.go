@@ -1,9 +1,9 @@
-// A simple kernel service wich provides access to a single github.com/coreos/bbolt
+// A simple kernel service wich provides access to a single github.com/etcd-io/bbolt
 // object store
 package bolt
 
 import (
-  bbolt "github.com/coreos/bbolt"
+  bbolt "github.com/etcd-io/bbolt"
   "github.com/peter-mount/golib/kernel"
   "flag"
   "fmt"

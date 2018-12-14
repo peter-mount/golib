@@ -1,7 +1,7 @@
 package bolt
 
 import (
-  bbolt "github.com/coreos/bbolt"
+  bbolt "github.com/etcd-io/bbolt"
 )
 
 type Tx struct {
