@@ -55,7 +55,7 @@ func (l *Logger) EscPos() *Logger {
 }
 
 func (l *Logger) Buffer() *bytes.Buffer {
-	if l.escpos {
+	if l.started && l.escpos {
 		l.textBuf.Write([]byte{'\n', '\n', '\n', '\x1B', 'M', 2, '\x1B', 'V', 'A', '0', '\xFA'})
 	}
 	return &l.textBuf
