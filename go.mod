@@ -10,7 +10,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.1.1
 	github.com/peter-mount/go-ipp v0.0.0-20190614175336-0f462c275a07
-	github.com/peter-mount/go.uuid v1.2.0
+	github.com/peter-mount/go.uuid v1.2.1-0.20180103174451-36e9d2ebbde5
 	github.com/peter-mount/sortfold v0.2.1
 	github.com/streadway/amqp v0.0.0-20190404075320-75d898a42a94
 	go.etcd.io/bbolt v1.3.3 // indirect

@@ -50,6 +50,9 @@ func TraceRequest(header string, nextRequestID IdGenerator) mux.MiddlewareFunc {
 
 // Default ID generator, Generates a UUID
 func DefaultIDGenerator() (string, error) {
-	id := uuid.NewV4()
+	id, err := uuid.NewV4()
+	if err != nil {
+		return "", err
+	}
 	return id.String(), nil
 }
